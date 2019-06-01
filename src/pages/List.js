@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+
 export class list extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { characters: [] };
+    this.state = { 
+      charactersList: [], 
+      activePage : 0
+    };
   }
 
   componentDidMount() {
     this.getCharactersList();
   }
-  //https://kitsu.io/api/edge/characters?filter[name]=naruto
+  
   getCharactersList = () => {
     axios
       .get('https://kitsu.io/api/edge/characters')
       .then(response => {
-        this.setState({ characters: response.data.data });
+        this.setState({ charactersList: response.data.data });
         console.log(this.state.characters);
       })
       .catch(function(error) {
@@ -25,8 +29,28 @@ export class list extends Component {
       });
   };
 
+  findCharacters = () => {
+    axios
+    .get('https://kitsu.io/api/edge/characters?filter[name]=naruto')
+    .then(response => {
+      this.setState({ 
+        charactersList: response.data.data, 
+        activePage: 0 
+      });
+    })
+    .catch(function(error) {
+      console.log('Problemas ao buscar lista');
+      console.log(error);
+    });
+  }
+
+  openDetailCharacter = (e, character)  => {
+    e.preventDefault()
+    console.log(character);   
+  }
+
   render() {
-    const { characters } = this.state;
+    const { charactersList } = this.state;
     return (
       <div className="container-list">
         <div className="header-list">
@@ -35,8 +59,8 @@ export class list extends Component {
         </div>
 
         <ul className="list-content">
-          {characters.map((item, index) => (
-            <li key={index}>
+          {charactersList.map((item, index) => (
+            <li key={index} onClick={(e) => this.openDetailCharacter(e, item)}>
               <span className="middle-v-align image">
                 <img src={item.attributes.image.original} alt="" />
               </span>
@@ -51,29 +75,7 @@ export class list extends Component {
           ))}
         </ul>
 
-        <div id="paginate">
-          <a className="prev" href="#">
-            &#9664;
-          </a>
-          <a className="link-page active" href="#">
-            1
-          </a>
-          <a className="link-page" href="#">
-            2
-          </a>
-          <a className="link-page" href="#">
-            3
-          </a>
-          <a className="link-page" href="#">
-            4
-          </a>
-          <a className="link-page" href="#">
-            5
-          </a>
-          <a className="next" href="#">
-            &#9654;
-          </a>
-        </div>
+       
       </div>
     );
   }
