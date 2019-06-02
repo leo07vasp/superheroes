@@ -5,5 +5,4 @@ const Search = () => <form className="search" action="">
         <input id="search" type="text" />
       </form>
     
-  
 export default Search;

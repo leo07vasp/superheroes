@@ -21,7 +21,7 @@ export class list extends Component {
       .get('https://kitsu.io/api/edge/characters')
       .then(response => {
         this.setState({ charactersList: response.data.data });
-        console.log(this.state.characters);
+        console.log('charactersList',this.state.charactersList);
       })
       .catch(function(error) {
         console.log('Problemas ao buscar lista');
