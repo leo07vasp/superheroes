@@ -1,5 +1,4 @@
 import React from 'react';
-import Search from './Search';
 
 const Header = () =>
 
@@ -8,7 +7,6 @@ const Header = () =>
         <b>BUSCA KITSU</b> TESTE FRONT-END
         </h1>
         <h2>THIAGO CAPISTRANO</h2>
-        
       </header>
 
 export default Header;

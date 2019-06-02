@@ -1,120 +1,106 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Header, Footer, Media } from '../components';
+import notFound from '../assets/images/notFound.jpg'
 
 export class Detail extends Component {
+  
   constructor(props) {
     super(props);
 
     this.state = {
       id : this.props.match.params.id,
-      character: '' 
+      character: '',
+      mediaInfo: '',
+      render: false
     };
+
   }
 
   componentDidMount() {
     this.getCharacters()
-    //this.getInfoCharactersMedia(this.state.character.relationships.mediaCharacters.links.related);
   }
 
 
-  getCharacters = () => {
+  getCharacters =  () => {
     const { id } = this.state;
 
-    axios
+     axios
       .get('https://kitsu.io/api/edge/characters/' + id )
       .then(response => {
         this.setState({ character: response.data.data })
+        console.log('getCharacters character ', this.state.character)
+        this.getInfoCharactersMedia(this.state.character.relationships.mediaCharacters.links.related)
       })
       .catch(function(error) {
         console.log('Problemas ao buscar lista');
         console.log(error);
-      });
+      }).finally(() => 
+        this.setState({render: true})
+      );
   }
-  
-  // getInfoCharactersMedia = (url) => {
-  //   console.log('getInfoCharactersMedia url', url)
-  //   axios
-  //     .get(url)
-  //     .then(response => {
-  //       //console.log('getInfoCharactersMedia',response.data.data)
-  //       // this.setState(prevState => ({
-  //       //   mediaLinks: [...prevState.mediaLinks, response.data.data]
-  //       // }));
-  //        this.setState({ mediaLinks: response.data.data })
-  //       // console.log('character', this.state.character)
-  //        //console.log('mediaLinks', this.state.mediaLinks)
-  //        this.state.mediaLinks.map((item, index)=> (
-  //           this.getInfoCharactersMedia(item.relationships.media.links.related)
-  //       ))
-         
-                  
-  //     })
-  //     .catch(function(error) {
-  //       console.log('Problemas ao buscar lista');
-  //       console.log(error);
-  //     });
-  // };
-
-
-  // getCharactersMedia = (url) => {
-  //     console.log('url', url)
-  //     axios
-  //     .get(url)
-  //     .then(response => {
-  //       this.setState(prevState => ({
-  //          mediaInfo: [...prevState.mediaInfo, response.data.data]
-  //       }));
-  //       //this.setState({mediaInfo: response.data.data});
-  //       console.log('mediaInfo', this.state.mediaInfo)
-  //     })
-  //     .catch(function(error) {
-  //       console.log('Problemas ao buscar lista');
-  //       console.log(error);
-  //     });
+ 
+  getInfoCharactersMedia =  (url) => {
+    console.log('getInfoCharactersMedia url', url)
     
+    let medialist = []
 
-  //    console.log('mediaInfo',this.state.mediaInfo)
-  // }
+     axios
+      .get(url)
+      .then(response => {
+        medialist = response.data.data
+        medialist.map(item => (
+            this.getMediaInfo(item.relationships.media.links.related)       
+        ))
+      })
+      .catch(function(error) {
+        console.log('Problemas ao buscar lista');
+        console.log(error);
+      })
+  };
 
-    
+  getMediaInfo = (url) => {
+     axios
+    .get(url)
+    .then(response => {
+      this.setState(prevState => ({
+        mediaInfo: [...prevState.mediaInfo, response.data.data]
+      }));
+      console.log('mediaInfo state', this.state.mediaInfo)
+    })
+    .catch(function(error) {
+      console.log('Problemas ao buscar lista');
+      console.log(error);
+    })
+
+  }
+   
   render() {
-    const { character } = this.state;
+    const { character, mediaInfo, render } = this.state;
     return (
-      <>
-      {character && (
+      <div className="container-list">
+      
+      {render === true && (
         <>
           <h3>{character.attributes.name}</h3>
-            <img src={character.attributes.image.original} alt="" />
+          <img src={(character.attributes.image) ? character.attributes.image.original : notFound} alt="" />
            
-          <p dangerouslySetInnerHTML={{__html: character.attributes.description}} />
+          <p dangerouslySetInnerHTML={{__html: character.attributes.description || 'informações não encontradas'}} />
           <br/>
-          <h4>Medias</h4>
-          <ul>
-          </ul>
+        
+            <>
+            <h4>Medias</h4>
+            <ul>
+              {/* {mediaInfo.map((item, index) => (
+                <div key={index}>
+                  <li>{item}</li>
+                </div>
+              ))} */}
+            </ul>
+            </>
+        
         </>
       )}
-      </>
-    //   {character && (
-    //     <>
-    //     {/* <Header /> */}
-    //       <div style={{float: "left"}}>
-    //       <h3>{character.attributes.name}</h3>
-    //         <img src={character.attributes.image.original} alt="" />
-           
-    //       </div>
-    //       <p dangerouslySetInnerHTML={{__html: character.attributes.description}} />
-    //       <br/>
-    //       <h4>Medias</h4>
-    //       <ul>
-          
-    //       {mediaInfo && mediaInfo.map((item, index)=> (
-    //         <Media media={item} index={index} />
-    //       ))}
-    //       </ul>
-    //       {/* <Footer /> */}
-    //   </>
-    //   )}
+      </div>
     );
   }
 }
