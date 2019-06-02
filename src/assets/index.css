@@ -191,7 +191,14 @@ header h2 {
   color: #d20a0a;
   transition: background linear 0.25s;
 }
-#paginate a.active,
+#paginate a.disabled {
+  cursor: not-allowed;
+}
+#paginate a.active{
+  cursor: not-allowed;
+  background: #d42026;
+  color: #fff;
+}
 #paginate a:hover {
   background: #d42026;
   color: #fff;

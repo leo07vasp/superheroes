@@ -8,23 +8,27 @@ export class list extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
+    this.state = {
       charactersList: [], 
-      activePage : 10,
-      allCharacters: 0,
       textFind : '',
+
     };
+    console.log(this.props)
   }
 
   componentDidMount() {
-    this.getCharactersList();
+    localStorage.removeItem('activePage');
+    this.getCharactersList('https://kitsu.io/api/edge/characters');
   }
   
-  getCharactersList = () => {
+  getCharactersList = (url) => {
+    console.log(url)
     axios
-      .get('https://kitsu.io/api/edge/characters')
+      .get(url)
       .then(response => {
-        this.setState({ charactersList: response.data.data, allCharacters: response.data.meta.count });
+        this.setState({ charactersList: response.data.data, 
+          textFind : ''
+       });
         console.log('charactersList',this.state.charactersList);
       })
       .catch(function(error) {
@@ -39,32 +43,22 @@ export class list extends Component {
       })
   }
 
-  findCharacters = (e, text) => {
+  findCharacters = (e) => {
     e.preventDefault()
-    
-    axios
-    .get('https://kitsu.io/api/edge/characters?filter[name]=' + text)
-    .then(response => {
-      this.setState({ 
-        charactersList: response.data.data, 
-        allCharacters: response.data.meta.count,
-        activePage: 0,
-        textFind : ''
-      });
-      console.log('findCharacters response',  this.state.charactersList)
-    })
-    .catch(function(error) {
-      console.log('Problemas ao buscar lista');
-      console.log(error);
-    });
+    this.getCharactersList('https://kitsu.io/api/edge/characters?filter[name]=' + this.state.textFind)
   }
-
-
 
   openDetailCharacter = (e, character)  => {
     e.preventDefault()
     this.props.history.push('character/' + character.id)
   }
+
+  findCharactersPage = (page) => {
+    
+    localStorage.setItem('activePage', page);
+    this.getCharactersList('https://kitsu.io/api/edge/characters?page[limit]=10&page[offset]=' + page + 0 )
+  }
+
 
   render() {
     const { charactersList, textFind, activePage } = this.state;
@@ -102,7 +96,7 @@ export class list extends Component {
             </li>
           ))}
         </ul>
-        <Pagination currentPage={activePage} />
+        <Pagination findPage={(e) => this.findCharactersPage(e)}/>
         </>
       ) : ('Nenhum registro encontrado')}
       </div>

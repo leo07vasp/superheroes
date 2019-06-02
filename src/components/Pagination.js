@@ -6,41 +6,35 @@ export class Pagination extends Component {
     super(props);
 
     this.state = {
-      currentPage : this.props.currentPage || 0,
-      allRows: this.props.rows,
-      pageSize: this.props.pageSize || 5
+      currentPage : localStorage.getItem('activePage') || 1,
     };
   }
 
-
-  
-
+  handleClick = (e, page) => {
+    e.preventDefault()
+    this.props.findPage(page)
+  }
 
   render() {
-    
-    const { currentPage, allRows, pageSize } = this.state
-    
+    let currentPage =  localStorage.getItem('activePage') || 1
     let items = [];
-    for (let number = 1; number <= 5; number++) {
-      console.log('currentPage',(currentPage + 1) === number)
-      console.log('currentPage',currentPage + 1)
+    for (let number = parseInt(currentPage); number <= (parseInt(currentPage)+4); number++) {
       items.push(
-        <a className={`link-page ${(currentPage === number) ? 'active' : ''}`} href={number}>
-        
-          {currentPage}
+        <a className={`link-page ${(parseInt(currentPage) === number) ? 'active' : ''}`} onClick={(e) => this.handleClick(e, number)}>
+          {number}
         </a>
       );
     }
 
     return (
-     <div id="paginate">
-     <a className="prev" href="#">
-       &#9664;
-     </a>
-    {items}
-    <a className="next" href="#">
-      &#9654;
-    </a>
+    <div id="paginate">
+      <a className={`prev ${(currentPage -1 <= 0) ? 'disabled' : ''}`}  onClick={(e) => this.handleClick(e, currentPage -1 )}>
+        &#9664;
+      </a>
+      {items}
+      <a className="next" onClick={(e) => this.handleClick(e, parseInt(currentPage) + 1 )}>
+        &#9654;
+      </a>
     </div>
     );
   }
