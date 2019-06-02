@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-
+import { Search } from '../components';
 
 export class list extends Component {
   constructor(props) {
@@ -46,12 +46,14 @@ export class list extends Component {
 
   openDetailCharacter = (e, character)  => {
     e.preventDefault()
-    console.log(character);   
+    this.props.history.push('character/' + character.id, { ...character })
   }
 
   render() {
     const { charactersList } = this.state;
     return (
+      <>
+      <Search />
       <div className="container-list">
         <div className="header-list">
           <span>Personagem</span>
@@ -74,9 +76,8 @@ export class list extends Component {
             </li>
           ))}
         </ul>
-
-       
       </div>
+      </>
     );
   }
 }

@@ -1,10 +1,21 @@
 import React from 'react';
 import './App.css';
-import Page from './pages/Page';
+import Home from './pages/Home';
+import { Header, Footer} from './components/'
+import Detail from './pages/Detail';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <Page />
+    <>
+     {/* <Router>
+       <Route path="/" component={Home} />
+       <Route path="/character/:id" component={Detail} />
+     </Router> */}
+    <Header />
+    <Detail />
+    <Footer />
+    </>
   );
 }
 

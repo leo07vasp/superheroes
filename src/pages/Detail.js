@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Media from '../components/Media';
+import { Header, Footer, Media } from '../components';
 
 export class Detail extends Component {
   constructor(props) {
@@ -417,7 +417,10 @@ export class Detail extends Component {
     }
 
   componentDidMount() {
-    this.getInfoCharactersMedia(this.state.character.relationships.mediaCharacters.links.related);
+    console.log(`teste`)
+    //console.log(this.props.match);
+    //this.getInfoCharactersMedia(this.state.character.relationships.mediaCharacters.links.related);
+  
   }
   
   getInfoCharactersMedia = (url) => {
@@ -461,16 +464,17 @@ export class Detail extends Component {
      this.setState({mediaInfo: mediaList});
   }
 
-
+    
   render() {
     const { character, mediaInfo} = this.state;
     return (
-      <div>
+      <>
+        {/* <Header /> */}
+          <div style={{float: "left"}}>
           <h3>{character.attributes.name}</h3>
-          <span>
             <img src={character.attributes.image.original} alt="" />
-          </span>
-          <h4>Descrição</h4>
+           
+          </div>
           <p dangerouslySetInnerHTML={{__html: character.attributes.description}} />
           <br/>
           <h4>Medias</h4>
@@ -479,7 +483,8 @@ export class Detail extends Component {
             <Media media={item} index={index} />
           ))}
           </ul>
-      </div>
+          {/* <Footer /> */}
+      </>
     );
   }
 }
