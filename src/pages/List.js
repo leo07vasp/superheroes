@@ -61,7 +61,7 @@ export class list extends Component {
   };
 
   render() {
-    const { charactersList, textFind, activePage } = this.state;
+    const { charactersList, textFind } = this.state;
     return (
       <>
         <form className="search" action="">
