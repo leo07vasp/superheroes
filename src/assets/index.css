@@ -36,6 +36,11 @@ header {
   /* border: 1px solid red; */
 }
 
+header h1 a {
+  color: #d42026;
+  text-decoration: none;
+}
+
 header h1 b {
   font-weight: 900;
   position: relative;
@@ -194,7 +199,7 @@ header h2 {
 #paginate a.disabled {
   cursor: not-allowed;
 }
-#paginate a.active{
+#paginate a.active {
   cursor: not-allowed;
   background: #d42026;
   color: #fff;
@@ -288,4 +293,3 @@ footer {
     margin-top: 15px;
   }
 }
-
