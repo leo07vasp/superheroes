@@ -293,3 +293,17 @@ footer {
     margin-top: 15px;
   }
 }
+/* detail */
+/* Media detail */
+
+.media-box {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.media-box > div {
+  margin-right: 30px;
+  width: 23%;
+  text-align: center;
+}

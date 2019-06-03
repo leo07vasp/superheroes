@@ -9,7 +9,7 @@ export class Detail extends Component {
     this.state = {
       id: this.props.match.params.id,
       character: '',
-      mediaInfo: [{}],
+      mediaInfo: [],
       render: false
     };
   }
@@ -98,16 +98,21 @@ export class Detail extends Component {
             />
             <br />
 
-            <>
-              <h4>Medias</h4>
-              <ul>
+            <h4>Medias</h4>
+            {mediaInfo.length !== 0 ? (
+              <ul className="media-box">
                 {mediaInfo.map((item, index) => (
                   <div key={index}>
-                    <li>{item}</li>
+                    <li>
+                      <img src={item.attributes.posterImage.small} alt="" />
+                      <p>{item.attributes.canonicalTitle} </p>
+                    </li>
                   </div>
                 ))}
               </ul>
-            </>
+            ) : (
+              'carregando'
+            )}
           </>
         )}
       </div>
